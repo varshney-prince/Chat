@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
-export default function LoginScreen() {
+const LoginScreen=({ navigation }) =>{
   const buttonRipple = {
     color: 'purple',
     borderless: true,
@@ -21,13 +21,16 @@ export default function LoginScreen() {
         <Pressable style={styles.button} android_ripple={buttonRipple}>
           <Text style={styles.buttonText}>Login</Text>
         </Pressable>
-        <Pressable style={styles.button} android_ripple={buttonRipple}>
+        <Pressable 
+        style={styles.button} android_ripple={buttonRipple}
+        onPress={() => {navigation.navigate('SignUp')}}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </Pressable>
       </View>
     </View>
   );
 }
+export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
