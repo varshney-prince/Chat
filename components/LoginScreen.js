@@ -23,7 +23,7 @@ const LoginScreen=({ navigation }) =>{
         </Pressable>
         <Pressable 
         style={styles.button} android_ripple={buttonRipple}
-        onPress={() => {navigation.navigate('SignUp')}}>
+        onPress={() => navigation.navigate('SignUp')}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </Pressable>
       </View>

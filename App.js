@@ -12,7 +12,7 @@ export default function App() {
      <NavigationContainer>
        <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name={'LoginScreen'} component={LoginScreen} />
-          <Stack.Screen name={'SignUpScreen'} component={SignUp} />
+          <Stack.Screen name={'SignUp'} component={SignUp} />
   
       </Stack.Navigator>
      </NavigationContainer>
