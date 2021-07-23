@@ -25,7 +25,7 @@ export default function SignUp() {
           <Text style={styles.buttonText}>Sign Up</Text>
         </Pressable>
         <Pressable style={styles.button} android_ripple={buttonRipple}>
-          <Text style={styles.buttonText}>Already Have an Account?.</Text>
+          <Text style={styles.buttonText}>Already Have an Account?</Text>
         </Pressable>
       </View>
     </View>
