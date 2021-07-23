@@ -24,7 +24,8 @@ export default function SignUp() {
         <Pressable style={styles.button} android_ripple={buttonRipple}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </Pressable>
-        <Pressable style={styles.button} android_ripple={buttonRipple}>
+        <Pressable style={styles.button} android_ripple={buttonRipple}
+           onPress={() => navigation.navigate('LoginScreen')}>
           <Text style={styles.buttonText}>Already Have an Account?</Text>
         </Pressable>
       </View>
