@@ -3,11 +3,19 @@ import { Text, View, StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
 import LoginScreen from './components/LoginScreen';
 import SignUp from './components/SignUp';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+const Stack = createStackNavigator();
 export default function App() {
   return (
     <View style={styles.container}>
-    <SignUp
-    />
+     <NavigationContainer>
+       <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name={'LoginScreen'} component={LoginScreen} />
+          <Stack.Screen name={'SignUpScreen'} component={SignUp} />
+  
+      </Stack.Navigator>
+     </NavigationContainer>
     
     </View>
   );
