@@ -18,12 +18,12 @@ const LoginScreen=({ navigation }) =>{
         <TextInput style={styles.input} placeholder="Password" />
       </View>
       <View style={styles.buttonAlign}>
-        <Pressable style={styles.button} android_ripple={buttonRipple}>
+        <Pressable style={styles.button} android_ripple={buttonRipple}
+        onPress={()=> navigation.navigate('LoginScreen')}>
           <Text style={styles.buttonText}>Login</Text>
         </Pressable>
         <Pressable 
-        style={styles.button} android_ripple={buttonRipple}
-        onPress={() => navigation.navigate('SignUp')}>
+        style={styles.button} android_ripple={buttonRipple}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </Pressable>
       </View>
