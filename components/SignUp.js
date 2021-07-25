@@ -1,42 +1,110 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
-export default function SignUp() {
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Pressable,
+  Button,
+} from 'react-native';
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import IconEntypo from 'react-native-vector-icons/Entypo';
+import IconMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconIonicons from 'react-native-vector-icons/Ionicons';
+const SignUp = ({ navigation }) => {
   const buttonRipple = {
     color: 'purple',
     borderless: true,
   };
   return (
     <View style={styles.container}>
+        <View style={styles.header}>
+        <View style={{ flex: 0.1, justifyContent: 'center' }}>
+      
+            <IconIonicons
+              style={{ padding: 5 }}
+              name={'arrow-back'}
+              size={35}
+              color={'black'}
+              onPress={() => {navigation.navigate('Welcome')}}
+            />
+        </View>
+        <View style={{ flex: 0.9, justifyContent: 'center' }}>
+          <Text style={styles.headerText}>Sign-Up</Text>
+        </View>
+      </View>
+        <View style={styles.body}>
       <View style={styles.logo}>
         <Text style={styles.logoText}>Chat-Mate</Text>
       </View>
-      <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder="Username" />
-      </View>
-       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder="Phone Number" />
-      </View>
+      <View style={styles.detail}>
+        <View style={styles.inputContainer}>
+          <IconAntDesign
+            style={{ padding: 5 }}
+            name={'user'}
+            size={35}
+            color={'black'}
+          />
+          <TextInput style={styles.input} placeholder="Username" />
+        </View>
+        <View style={styles.inputContainer}>
+          <IconAntDesign
+            style={{ padding: 5 }}
+            name={'mail'}
+            size={35}
+            color={'black'}
+          />
+          <TextInput style={styles.input} placeholder="Email" />
+        </View>
+        <View style={styles.inputContainer}>
+          <IconAntDesign
+            style={{ padding: 5 }}
+            name={'mobile1'}
+            size={35}
+            color={'black'}
+          />
+          <TextInput style={styles.input} placeholder="Phone Number" />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder="Password" />
+        <View style={styles.inputContainer}>
+          <IconMaterialCommunityIcons
+            style={{ padding: 5 }}
+            name={'form-textbox-password'}
+            size={35}
+            color={'black'}
+          />
+          <TextInput
+            secureTextEntry={true}
+            style={styles.input}
+            placeholder="Password"
+          />
+        </View>
+        <View style={styles.buttonAlign}>
+          <Pressable style={styles.button} android_ripple={buttonRipple}>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </Pressable>
+        </View>
       </View>
-      <View style={styles.buttonAlign}>
-        <Pressable style={styles.button} android_ripple={buttonRipple}>
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </Pressable>
-        <Pressable style={styles.button} android_ripple={buttonRipple}
-           onPress={() => navigation.navigate('LoginScreen')}>
-          <Text style={styles.buttonText}>Already Have an Account?</Text>
-        </Pressable>
       </View>
     </View>
   );
-}
+};
+export default SignUp;
 const styles = StyleSheet.create({
+   header: {
+    flex: 0.8,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    //borderWidth:1
+  },
+  body: {
+    flex: 9.5,
+    marginTop: 40,
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'orange',
+  
+    backgroundColor: '#ecf0f1',
   },
   input: {
     // backgroundColor: 'white',
@@ -44,17 +112,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputContainer: {
-    height: 40,
-    borderWidth: 1,
-    marginBottom: 10,
-    marginLeft: 8,
-    marginRight: 8,
+    borderBottomWidth: 1,
+    //backgroundColor: 'white',
     padding: 10,
-    backgroundColor: 'white',
-    borderRadius: 8,
+    marginBottom: 10,
+    flexDirection: 'row',
   },
   button: {
-    backgroundColor: 'purple',
+    backgroundColor: 'white',
     borderWidth: 1,
     height: 40,
     //width:100,
@@ -65,7 +130,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     flex: 1,
-    color: 'white',
+    color: 'Black',
   },
   logo: {
     //borderWidth:1,
@@ -76,10 +141,21 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: 'bold',
     fontStyle: 'italic',
-    color: 'white',
+    color: 'Black',
   },
   buttonAlign: {
-    marginLeft: 20,
-    marginRight: 20,
+    marginTop: 10,
+    marginLeft: '25%',
+    marginRight: '25%',
+    
+  },
+  detail:{
+    marginLeft:'5%',
+    marginRight:'5%'
+  },
+   headerText: {
+    fontWeight: 'Bold',
+    textAlign: 'center',
+    fontSize: 25,
   },
 });

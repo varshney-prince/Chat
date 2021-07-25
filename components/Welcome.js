@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, Pressable, TouchableOpacity } from 'react-native';
-const LoginScreen=({ navigation }) =>{
+const Welcome=({ navigation }) =>{
   const buttonRipple = {
     color: 'purple',
     borderless: true,
@@ -13,7 +13,8 @@ const LoginScreen=({ navigation }) =>{
       </View>
     
         <TouchableOpacity style={styles.button} 
-        onPress={() => navigation.navigate('LoginScreen')}>
+         onPress={() => navigation.navigate('LoginScreen')}
+        >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity 
@@ -25,7 +26,7 @@ const LoginScreen=({ navigation }) =>{
   );
 }
 
-export default LoginScreen;
+export default Welcome;
 
 const styles = StyleSheet.create({
   container: {
