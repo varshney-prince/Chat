@@ -12,7 +12,8 @@ const LoginScreen=({ navigation }) =>{
         <Text style={styles.subtitle}>Have a seat! What would you like to do?</Text>
       </View>
     
-        <TouchableOpacity style={styles.button} >
+        <TouchableOpacity style={styles.button} 
+        onPress={() => navigation.navigate('LoginScreen')}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity 
@@ -53,9 +54,9 @@ const styles = StyleSheet.create({
       color: 'grey'
   },
   button: {
-    backgroundColor: 'white',
+    backgroundColor: 'blue',
     width: '70%',
-    borderWidth: 2,
+    //borderWidth: 2,
     height: 45,
     borderRadius: 10,
     marginBottom: '3%',
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     fontFamily: 'arial',
-    color: '#595a5c'
+    color: 'white'
   },
   buttonAlign: {
     marginLeft: 20,
