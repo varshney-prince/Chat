@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     flex: 1,
-    color: 'Black',
+    color: 'black',
   },
   logo: {
     //borderWidth:1,
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: 'bold',
     fontStyle: 'italic',
-    color: 'Black',
+    color: 'black',
   },
   buttonAlign: {
     marginTop: 10,
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     marginRight: '5%',
   },
   headerText: {
-    fontWeight: 'Bold',
+    fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 20,
   },

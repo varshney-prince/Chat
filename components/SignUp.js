@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,15 +7,31 @@ import {
   Pressable,
   Button,
 } from 'react-native';
+
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconEntypo from 'react-native-vector-icons/Entypo';
 import IconMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
+
+import db from '../config';
+
 const SignUp = ({ navigation }) => {
+
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [pno, setPNO] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPass, setConfirmPass] = useState('');
+
   const buttonRipple = {
     color: 'purple',
     borderless: true,
   };
+
+  let registerUser = ()=>{
+    
+  }
+
   return (
     <View style={styles.container}>
         <View style={styles.header}>
@@ -80,7 +96,7 @@ const SignUp = ({ navigation }) => {
           />
         </View>
         <View style={styles.buttonAlign}>
-          <Pressable style={styles.button} android_ripple={buttonRipple}>
+          <Pressable style={styles.button}>
             <Text style={styles.buttonText}>Sign Up</Text>
           </Pressable>
         </View>
@@ -130,7 +146,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     flex: 1,
-    color: 'Black',
+    color: 'black',
   },
   logo: {
     //borderWidth:1,
@@ -141,7 +157,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: 'bold',
     fontStyle: 'italic',
-    color: 'Black',
+    color: 'black',
   },
   buttonAlign: {
     marginTop: 10,
@@ -154,7 +170,7 @@ const styles = StyleSheet.create({
     marginRight:'5%'
   },
    headerText: {
-    fontWeight: 'Bold',
+    fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 25,
   },
