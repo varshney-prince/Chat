@@ -10,9 +10,12 @@ import Welcome from './components/Welcome';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+import db from './config';
+
 const Stack = createStackNavigator();
 
 export default function App() {
+
   return (
     <View style={styles.container}>
      <NavigationContainer>

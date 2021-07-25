@@ -6,6 +6,7 @@ import {
   TextInput,
   Pressable,
   Button,
+  TouchableOpacity,
 } from 'react-native';
 
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
@@ -22,6 +23,7 @@ const SignUp = ({ navigation }) => {
   const [pno, setPNO] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
+  const [warningText, setWarningText] = useState('');
 
   const buttonRipple = {
     color: 'purple',
@@ -29,7 +31,15 @@ const SignUp = ({ navigation }) => {
   };
 
   let registerUser = ()=>{
-    
+    const system = db.ref('system');
+    const users = db.ref('system/users');
+    let newUser = {
+      name: username,
+      userEmail: email,
+      userPhone: pno,
+      userPassword: password,
+    }
+    users.push(newUser);
   }
 
   return (
@@ -49,63 +59,74 @@ const SignUp = ({ navigation }) => {
           <Text style={styles.headerText}>Sign-Up</Text>
         </View>
       </View>
-        <View style={styles.body}>
-      <View style={styles.logo}>
-        <Text style={styles.logoText}>Chat-Mate</Text>
-      </View>
-      <View style={styles.detail}>
-        <View style={styles.inputContainer}>
-          <IconAntDesign
-            style={{ padding: 5 }}
-            name={'user'}
-            size={35}
-            color={'black'}
-          />
-          <TextInput style={styles.input} placeholder="Username" />
+      <View style={styles.body}>
+        <View style={styles.logo}>
+          <Text style={styles.logoText}>Chat-Mate</Text>
         </View>
-        <View style={styles.inputContainer}>
-          <IconAntDesign
-            style={{ padding: 5 }}
-            name={'mail'}
-            size={35}
-            color={'black'}
-          />
-          <TextInput style={styles.input} placeholder="Email" />
-        </View>
-        <View style={styles.inputContainer}>
-          <IconAntDesign
-            style={{ padding: 5 }}
-            name={'mobile1'}
-            size={35}
-            color={'black'}
-          />
-          <TextInput style={styles.input} placeholder="Phone Number" />
-        </View>
+        <View style={styles.detail}>
+          <View style={styles.inputContainer}>
+            <IconAntDesign
+              style={{ padding: 5 }}
+              name={'user'}
+              size={35}
+              color={'black'}
+            />
+            <TextInput style={styles.input} placeholder="Username" onChangeText={(text)=>setUsername(text)} />
+          </View>
+          <View style={styles.inputContainer}>
+            <IconAntDesign
+              style={{ padding: 5 }}
+              name={'mail'}
+              size={35}
+              color={'black'}
+            />
+            <TextInput style={styles.input} placeholder="Email" onChangeText={(text)=>setEmail(text)} />
+          </View>
+          <View style={styles.inputContainer}>
+            <IconAntDesign
+              style={{ padding: 5 }}
+              name={'mobile1'}
+              size={35}
+              color={'black'}
+            />
+            <TextInput style={styles.input} placeholder="Phone Number" onChangeText={(text)=>setPNO(text)} />
+          </View>
 
-        <View style={styles.inputContainer}>
-          <IconMaterialCommunityIcons
-            style={{ padding: 5 }}
-            name={'form-textbox-password'}
-            size={35}
-            color={'black'}
-          />
-          <TextInput
-            secureTextEntry={true}
-            style={styles.input}
-            placeholder="Password"
-          />
+          <View style={styles.inputContainer}>
+            <IconMaterialCommunityIcons
+              style={{ padding: 5 }}
+              name={'form-textbox-password'}
+              size={35}
+              color={'black'}
+            />
+            <TextInput
+              secureTextEntry={true}
+              style={styles.input}
+              placeholder="Password"
+              onChangeText={(text)=>setPassword(text)}
+            />
+          </View>
+          <View style={styles.buttonAlign}>
+            <TouchableOpacity style={styles.button} 
+                onPress={()=>{
+                  if( username && (email || pno) && password ){
+                    registerUser();
+                   }
+                  else{ setWarningText('Please fill all the details! ' + 
+                    'You can skip one out of Email and Phone no.')}
+                }} >
+              <Text style={styles.buttonText}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.warning} >{warningText}</Text>
         </View>
-        <View style={styles.buttonAlign}>
-          <Pressable style={styles.button}>
-            <Text style={styles.buttonText}>Sign Up</Text>
-          </Pressable>
-        </View>
-      </View>
       </View>
     </View>
   );
 };
+
 export default SignUp;
+
 const styles = StyleSheet.create({
    header: {
     flex: 0.8,
@@ -118,35 +139,33 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   container: {
-    flex: 1,
-  
+    flex: 1,  
     backgroundColor: '#ecf0f1',
   },
   input: {
-    // backgroundColor: 'white',
-    //borderWidth:1,
-    flex: 1,
+    marginLeft: 15,
   },
   inputContainer: {
-    borderBottomWidth: 1,
-    //backgroundColor: 'white',
-    padding: 10,
     marginBottom: 10,
     flexDirection: 'row',
+    borderBottomWidth: 1
   },
   button: {
-    backgroundColor: 'white',
-    borderWidth: 1,
+    padding: 8,
+    marginVertical: 15,
+    backgroundColor: 'blue',
+    //borderWidth: 1,
     height: 40,
     //width:100,
     borderRadius: 10,
-    marginBottom: 7,
+    textAlign: 'center',
+    textAlignVertical: 'center'
   },
   buttonText: {
     textAlign: 'center',
     textAlignVertical: 'center',
     flex: 1,
-    color: 'black',
+    color: 'white',
   },
   logo: {
     //borderWidth:1,
@@ -166,12 +185,19 @@ const styles = StyleSheet.create({
     
   },
   detail:{
-    marginLeft:'5%',
-    marginRight:'5%'
+    padding: 20,
+    marginHorizontal: 25,
   },
    headerText: {
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 25,
   },
+   warning: {
+    textAlign:'center', 
+    color:'red', 
+    marginHorizontal: 0,
+    fontSize: 14,
+    fontWeight: 'bold'
+   }
 });
