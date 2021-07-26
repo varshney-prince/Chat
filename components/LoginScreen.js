@@ -1,20 +1,53 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
   Pressable,
-  Button,
+  TouchableOpacity,
 } from 'react-native';
+
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
+import db from '../config';
+import { useState } from 'react/cjs/react.development';
+
+let formStyle = { borderBottomColor: 'black' }
+let formColor = 'black';
+
 const LoginScreen = ({ navigation }) => {
-  const buttonRipple = {
-    color: 'purple',
-    borderless: true,
+
+  const [enteredName, setLoginUsername] = useState('');
+  const [enteredPass, setLoginPassword] = useState('');
+  const [warningText, setWarningText] = useState('');
+
+  useEffect( ()=>{
+    formStyle.borderBottomColor = 'black';
+    formColor: 'black';
+  }, [] )
+
+  const validateUser = () => {
+    const users = db.ref('system/users');
+    users.once('value', (data)=>{
+      let snapshot = data.val();
+      for(let id in snapshot){
+        if( enteredName == snapshot[id].name ){
+          if( enteredPass == snapshot[id].userPassword ){
+              formColor = 'black';
+              navigation.navigate('Welcome');
+          }
+          else{
+              formStyle.borderBottomColor = 'red';
+              formColor = 'red';
+              setWarningText('Invalid credentials! Try again!');
+          }
+        }
+      }
+    } )
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -42,30 +75,32 @@ const LoginScreen = ({ navigation }) => {
               style={{ padding: 5 }}
               name={'user'}
               size={25}
-              color={'black'}
+              color={formColor}
             />
-            <TextInput style={styles.input} placeholder="Username" />
+            <TextInput style={styles.input} placeholder="Username"  onChangeText={(text)=>setLoginUsername(text)} />
           </View>
 
           <View style={styles.inputContainer}>
             <IconMaterialCommunityIcons
               style={{ padding: 5 }}
               name={'form-textbox-password'}
-              size={35}
-              color={'black'}
+              size={25}
+              color={formColor}
             />
             <TextInput
               secureTextEntry={true}
               style={styles.input}
               placeholder="Password"
+              onChangeText={(text)=>setLoginPassword(text)}
             />
           </View>
           <View style={styles.buttonAlign}>
-            <Pressable style={styles.button} android_ripple={buttonRipple}>
+            <TouchableOpacity style={styles.button} onPress={()=>validateUser()} >
               <Text style={styles.buttonText}>Login</Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </View>
+        <Text style={styles.warning} >{warningText}</Text>
       </View>
     </View>
   );
@@ -90,6 +125,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'white',
     //borderWidth:1,
     flex: 1,
+    marginLeft: 5
   },
   inputContainer: {
     borderBottomWidth: 1,
@@ -99,18 +135,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   button: {
-    backgroundColor: 'white',
-    borderWidth: 1,
+    backgroundColor: 'blue',
     height: 40,
     //width:100,
     borderRadius: 10,
-    marginBottom: 7,
+    marginVertical: 20
   },
   buttonText: {
     textAlign: 'center',
     textAlignVertical: 'center',
     flex: 1,
-    color: 'black',
+    color: 'white',
+    padding: 10
   },
   logo: {
     //borderWidth:1,
@@ -129,12 +165,19 @@ const styles = StyleSheet.create({
     marginRight: '25%',
   },
   detail: {
-    marginLeft: '5%',
-    marginRight: '5%',
+    marginHorizontal: 20,
+    padding: 15
   },
   headerText: {
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 20,
   },
+  warning: {
+    textAlign:'center', 
+    color:'red', 
+    marginHorizontal: 0,
+    fontSize: 14,
+    fontWeight: 'bold'
+   }
 });

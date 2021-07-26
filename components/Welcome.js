@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, Pressable, TouchableOpacity } from 'react-native';
+
 const Welcome=({ navigation }) =>{
   const buttonRipple = {
     color: 'purple',
@@ -13,7 +14,7 @@ const Welcome=({ navigation }) =>{
       </View>
     
         <TouchableOpacity style={styles.button} 
-         onPress={() => navigation.navigate('LoginScreen')}
+         onPress={() => { console.log('Hi');navigation.navigate('LoginScreen')}}
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>

@@ -4,10 +4,11 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Pressable,
-  Button,
   TouchableOpacity,
+  StatusBar
 } from 'react-native';
+
+import Constants from 'expo-constants';
 
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconEntypo from 'react-native-vector-icons/Entypo';
@@ -129,13 +130,15 @@ export default SignUp;
 
 const styles = StyleSheet.create({
    header: {
-    flex: 0.8,
+    flex: 0.9,
+    margin: 1,
     backgroundColor: 'white',
     flexDirection: 'row',
-    //borderWidth:1
+    //borderWidth:1,
+    elevation: 6
   },
   body: {
-    flex: 9.5,
+    flex: 9.1,
     marginTop: 40,
   },
   container: {
@@ -192,6 +195,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 25,
+    //marginLeft: -35
   },
    warning: {
     textAlign:'center', 
