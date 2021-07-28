@@ -19,10 +19,10 @@ const ChatHistory = ({navigation, route}) => {
 
     let bootstrapData = (data)=>{
         let sampleChat = {
-            receiverUsername: '',
+            receiverUsername: 'Harsh',
             lastText: ''
         }
-        userChats.push(sampleChat)
+        data.push(sampleChat);
     };
     
     useEffect( ()=>{
@@ -34,18 +34,28 @@ const ChatHistory = ({navigation, route}) => {
             for(let id in snapshot){
                 chatsContainer.push({id, ...snapshot[id]})
             }
+            if( chatsContainer.length == 0 ){
+                bootstrapData(userData);
+            }
             setUserChats(chatsContainer);
-
         } )
         }
         else{ return ; }
     } , [] );
 
     let chats = userChats.map( (item, index)=>{
-        return (<TouchableOpacity>
-            <View key={item} style={styles.chat} >
-                <Text style={styles.chatReceiverName} >{key.receiverUsername}</Text>
-                <Text style={styles.previewText} >{key.lastText}</Text>
+        return (<TouchableOpacity onPress={
+            ()=>{navigation.navigate('OngoingChat', 
+                {
+                senderID : route.params.chatUserID,
+                senderName : route.params.chatUser,
+                receiverID : item.id,
+                receiverName : item.receiverUsername
+                } ) }
+        } >
+            <View style={styles.chat} >
+                <Text style={styles.chatReceiverName} >{item.receiverUsername}</Text>
+                <Text style={styles.previewText} >{item.lastText}</Text>
             </View></TouchableOpacity>);
     } )
 
