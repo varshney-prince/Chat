@@ -6,6 +6,7 @@ import Constants from 'expo-constants';
 import LoginScreen from './components/LoginScreen';
 import SignUp from './components/SignUp';
 import Welcome from './components/Welcome';
+import ChatHistory  from './components/ChatHistory';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -23,6 +24,7 @@ export default function App() {
        <Stack.Screen name={'Welcome'} component={Welcome} />
         <Stack.Screen name={'LoginScreen'} component={LoginScreen} />
         <Stack.Screen name={'SignUp'} component={SignUp} />
+        <Stack.Screen name={'ChatHistory'} component={ChatHistory} /> 
       </Stack.Navigator>
      </NavigationContainer>
     

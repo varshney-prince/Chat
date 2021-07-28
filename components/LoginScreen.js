@@ -14,7 +14,6 @@ import IconIonicons from 'react-native-vector-icons/Ionicons';
 import db from '../config';
 import { useState } from 'react/cjs/react.development';
 
-let formStyle = { borderBottomColor: 'black' }
 let formColor = 'black';
 
 const LoginScreen = ({ navigation }) => {
@@ -24,7 +23,6 @@ const LoginScreen = ({ navigation }) => {
   const [warningText, setWarningText] = useState('');
 
   useEffect( ()=>{
-    formStyle.borderBottomColor = 'black';
     formColor: 'black';
   }, [] )
 
@@ -36,10 +34,12 @@ const LoginScreen = ({ navigation }) => {
         if( enteredName == snapshot[id].name ){
           if( enteredPass == snapshot[id].userPassword ){
               formColor = 'black';
-              navigation.navigate('Welcome');
+              navigation.navigate('ChatHistory', {
+                chatUser: snapshot[id].name, 
+                chatUserID: id
+               } );
           }
           else{
-              formStyle.borderBottomColor = 'red';
               formColor = 'red';
               setWarningText('Invalid credentials! Try again!');
           }
