@@ -24,7 +24,7 @@ const OngoingChat = ({navigation, route}) => {
     useEffect( ()=>{
         let allChats = db.ref('sample/chats');
         if( route && route.params && route.params.senderName ){
-             allChats = db.ref(`${route.params.senderName}/${route.params.receiverID}/chats`);
+             allChats = db.ref(`${route.params.senderName}/${route.params.receiverName}`);
         }
         allChats.on('value', (data)=>{
             let snapshot = data.val();
@@ -48,15 +48,23 @@ const OngoingChat = ({navigation, route}) => {
 
     const addText = ()=>{
         let allChats = db.ref('sample/chats');
+        let receiverChats = db.ref('sample/receiverChats');
         if( route && route.params && route.params.senderName ){
-            allChats = (`${route.params.senderName}/${route.params.receiverID}/chats`);
+            allChats = db.ref(`${route.params.senderName}/${route.params.receiverName}`);
+            receiverChats = db.ref(`${route.params.receiverName}/${route.params.senderName}`);
         }
         let newText = {
             time: (new Date()).getHours() + ':' + (new Date()).getMinutes(),
             sender: true,
             message: textToSend 
         }
+        let receiverText = {
+            time: (new Date()).getHours() + ':' + (new Date()).getMinutes(),
+            sender: false,
+            message: textToSend
+        }
         allChats.push(newText);
+        receiverChats.push(receiverText);
         setText('');
     };
 
