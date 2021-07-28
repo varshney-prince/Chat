@@ -13,6 +13,8 @@ import db from '../config';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
+//<View style={item.sender ? styles.senderTextContainer : styles.receiverTextContainer } >
+
 const OngoingChat = ({navigation, route}) => {
 
     const [currentText, setCurrentText] = useState('');
@@ -24,23 +26,23 @@ const OngoingChat = ({navigation, route}) => {
         if( route && route.params && route.params.senderName ){
              allChats = db.ref(`{route.params.senderName}/{route.params.receiverID}/chats`);
         }
-        let tempChats = []
         allChats.on('value', (data)=>{
             let snapshot = data.val();
+            let tempChats = [];
             for(let id in snapshot){
-                tempChats.push({id, ...allChats[id]});
+                tempChats.push({id, ...snapshot[id]});
             }
             setChatLog(tempChats);
         } );
     } , [] );
 
-    const texts = chatLog.map( (index, item)=>{
-        return (  <View>
-            <View style={item.sender ? styles.senderTextContainer : styles.receiverTextContainer } >
+    const texts = chatLog.map( (item, index)=>{
+        return (  <View style={{marginVertical: 2, marginHorizontal: 5}} >
+             <View style={item.sender ? styles.senderTextContainer : styles.receiverTextContainer} >
                 <Text style={{fontSize: 10}}>{item.time}</Text>
                 <Text>{item.message}</Text>
             </View>
-        </View>
+            </View>
         );
     } );
 
@@ -54,7 +56,6 @@ const OngoingChat = ({navigation, route}) => {
             sender: true,
             message: textToSend 
         }
-        chatLog.push(newText);
         allChats.push(newText);
         setText('');
     };
@@ -160,16 +161,16 @@ const styles = StyleSheet.create({
      },
      senderTextContainer: {
          backgroundColor: 'blue',
+         padding: 10, 
          borderRadius: 20,
-         padding: 10,
-         position: 'absolute',
-         right: 5
+         marginLeft: 50, 
+         alignSelf: 'flex-end'
      },
      receiverTextContainer: {
          backgroundColor: 'white',
+         padding: 10, 
          borderRadius: 20,
-         padding: 10,
-         position: 'absolute',
-         left: 5
+         marginRight: 50, 
+         alignSelf: 'flex-start'
      }
 });

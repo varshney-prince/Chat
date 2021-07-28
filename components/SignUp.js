@@ -34,6 +34,7 @@ const SignUp = ({ navigation }) => {
   let registerUser = ()=>{
     const system = db.ref('system');
     const users = db.ref('system/users');
+    if( !checkDuplicate(users) ){
     let newUser = {
       name: username,
       userEmail: email,
@@ -41,6 +42,23 @@ const SignUp = ({ navigation }) => {
       userPassword: password,
     }
     users.push(newUser);
+    navigation.navigate('LoginScreen');
+    }
+  }
+
+  let checkDuplicate = (users)=>{
+      users.once('value', (data)=>{
+        let snapshot = data.val();
+        for(let id in snapshot){
+          if( snapshot[id].name === username || ( snapshot[id].email && email && 
+            snapshot[id].userEmail === email) || ( snapshot[id].userPhone && pno && 
+              snapshot[id].userPhone === pno ) ){
+                setWarningText('Duplicate username/email/phone no. !');
+                return true;
+              }
+        }
+      } )
+      return false;
   }
 
   return (

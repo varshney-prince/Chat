@@ -22,8 +22,8 @@ export default function App() {
     <View style={styles.container}>
      <NavigationContainer>
        <Stack.Navigator screenOptions={{ headerShown: false }}>
-       <Stack.Screen name={'OngoingChat'} component={OngoingChat} />
        <Stack.Screen name={'Welcome'} component={Welcome} />
+       <Stack.Screen name={'OngoingChat'} component={OngoingChat} />
         <Stack.Screen name={'LoginScreen'} component={LoginScreen} />
         <Stack.Screen name={'SignUp'} component={SignUp} />
         <Stack.Screen name={'ChatHistory'} component={ChatHistory} /> 

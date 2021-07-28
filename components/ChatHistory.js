@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Pressable,
   TouchableOpacity,
   ScrollView
 } from 'react-native';
@@ -17,9 +16,18 @@ const ChatHistory = ({navigation, route}) => {
 
     const [user, setUser] = useState('');
     const [userChats, setUserChats] = useState([]);
+
+    let bootstrapData = (data)=>{
+        let sampleChat = {
+            receiverUsername: '',
+            lastText: ''
+        }
+        userChats.push(sampleChat)
+    };
     
     useEffect( ()=>{
-        const userData = db.ref( route.params.chatUser) || 'none';
+        if( route && route.params && route.params.chatUser ){
+        const userData = db.ref( route.params.chatUser)
         userData.on('value', (data)=>{
             let snapshot = data.val();
             let chatsContainer = [];
@@ -27,14 +35,17 @@ const ChatHistory = ({navigation, route}) => {
                 chatsContainer.push({id, ...snapshot[id]})
             }
             setUserChats(chatsContainer);
+
         } )
+        }
+        else{ return ; }
     } , [] );
 
-    let chats = userChats.map( (index, item)=>{
+    let chats = userChats.map( (item, index)=>{
         return (<TouchableOpacity>
-            <View style={styles.chat} >
-                <Text style={styles.chatReceiverName} >{item.receiverUsername}</Text>
-                <Text style={styles.previewText} >{item.lastText}</Text>
+            <View key={item} style={styles.chat} >
+                <Text style={styles.chatReceiverName} >{key.receiverUsername}</Text>
+                <Text style={styles.previewText} >{key.lastText}</Text>
             </View></TouchableOpacity>);
     } )
 
