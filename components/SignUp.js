@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -25,16 +25,27 @@ const SignUp = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
   const [warningText, setWarningText] = useState('');
+  const [userNames, setUserNamesList] = useState([]);
 
-  const buttonRipple = {
-    color: 'purple',
-    borderless: true,
-  };
+  let fetchUserNames = ()=>{
+    const users = db.ref('system/users');
+    users.once('value', (data)=>{
+        let snapshot = data.val();
+        let tempUsernames = [];
+        for(let id in snapshot){
+          userNames.push(snapshot[id].name)
+        }
+    } );
+  }
+
+  useEffect( ()=>{
+    fetchUserNames();
+  }, [] )
 
   let registerUser = ()=>{
     const system = db.ref('system');
     const users = db.ref('system/users');
-    if( !checkDuplicate(users) ){
+    if( !checkDuplicate() ){
     let newUser = {
       name: username,
       userEmail: email,
@@ -44,22 +55,17 @@ const SignUp = ({ navigation }) => {
     users.push(newUser);
     navigation.navigate('LoginScreen');
     }
+    else{ setWarningText('This username has been taken!') }
   }
 
-  let checkDuplicate = (users)=>{
-      users.once('value', (data)=>{
-        let snapshot = data.val();
-        for(let id in snapshot){
-          if( snapshot[id].name === username || ( snapshot[id].email && email && 
-            snapshot[id].userEmail === email) || ( snapshot[id].userPhone && pno && 
-              snapshot[id].userPhone === pno ) ){
-                setWarningText('Duplicate username/email/phone no. !');
-                return true;
-              }
-        }
-      } )
-      return false;
-  }
+  let checkDuplicate = ()=>{
+    for(let checkName of userNames){
+      if( username === checkName ){
+        return true;
+      }
+    }
+    return false;
+ }
 
   return (
     <View style={styles.container}>
