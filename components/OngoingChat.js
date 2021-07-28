@@ -16,8 +16,48 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 const OngoingChat = ({navigation, route}) => {
 
     const [currentText, setCurrentText] = useState('');
+    const [chatLog, setChatLog] = useState([]);
+    const [textToSend, setText] = useState('');
     
-    useEffect( ()=>{} , [] );
+    useEffect( ()=>{
+        let allChats = db.ref('sample/chats');
+        if( route && route.params && route.params.senderName ){
+             allChats = db.ref(`{route.params.senderName}/{route.params.receiverID}/chats`);
+        }
+        let tempChats = []
+        allChats.on('value', (data)=>{
+            let snapshot = data.val();
+            for(let id in snapshot){
+                tempChats.push({id, ...allChats[id]});
+            }
+            setChatLog(tempChats);
+        } );
+    } , [] );
+
+    const texts = chatLog.map( (index, item)=>{
+        return (  <View>
+            <View style={item.sender ? styles.senderTextContainer : styles.receiverTextContainer } >
+                <Text style={{fontSize: 10}}>{item.time}</Text>
+                <Text>{item.message}</Text>
+            </View>
+        </View>
+        );
+    } );
+
+    const addText = ()=>{
+        let allChats = db.ref('sample/chats');
+        if( route && route.params && route.params.senderName ){
+            allChats = (`{route.params.senderName}/{route.params.receiverID}/chats`);
+        }
+        let newText = {
+            time: (new Date()).getHours() + ':' + (new Date()).getMinutes(),
+            sender: true,
+            message: textToSend 
+        }
+        chatLog.push(newText);
+        allChats.push(newText);
+        setText('');
+    };
 
     return (
         <View style={styles.container}>
@@ -37,13 +77,21 @@ const OngoingChat = ({navigation, route}) => {
                     route.params.receiverName || "No name" }</Text>
                 </View>
             </View>
-            <View style={styles.body} ></View>
-            <View style={styles.bottom} >
-                <TextInput style={styles.input} placeholder="Type a message" />
-                <TouchableOpacity style={styles.sendBtn} >
+            <View style={styles.body} >
+                <View style={styles.scroll}>
+                <ScrollView scrollContainerStyle={styles.containerScroll} >
+                    {texts}
+                </ScrollView>
+                </View>
+                <View style={styles.bottom} >
+                <TextInput style={styles.input} placeholder="Type a message" 
+                 value={textToSend} onChangeText={(text)=>setText(text)}/>
+                <TouchableOpacity style={styles.sendBtn} onPress={addText} >
                     <FontAwesomeIcon name={'send'} size={30} color={'white'} />
                 </TouchableOpacity>
             </View>
+            </View>
+            
         </View>
     );
 };
@@ -68,15 +116,20 @@ const styles = StyleSheet.create({
         padding: 10
       },
       body: {
-          flex: 8
+          flex: 9.2,
+          //borderColor: 'green',
+          //borderWidth: 3
       },
       scroll: {
-          flex: 1
+          height: '88%',
+          //borderColor: 'red',
+          //borderWidth: 1,
       },
       containerScroll: {
-
+        
       },
      bottom: {
+        flex: 3,
         position: 'absolute',
         bottom: 5,
         width: '100%',
@@ -104,5 +157,19 @@ const styles = StyleSheet.create({
          paddingLeft: 8,
          marginHorizontal: 4,
          elevation: 6
+     },
+     senderTextContainer: {
+         backgroundColor: 'blue',
+         borderRadius: 20,
+         padding: 10,
+         position: 'absolute',
+         right: 5
+     },
+     receiverTextContainer: {
+         backgroundColor: 'white',
+         borderRadius: 20,
+         padding: 10,
+         position: 'absolute',
+         left: 5
      }
 });
