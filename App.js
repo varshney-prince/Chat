@@ -7,6 +7,7 @@ import LoginScreen from './components/LoginScreen';
 import SignUp from './components/SignUp';
 import Welcome from './components/Welcome';
 import ChatHistory  from './components/ChatHistory';
+import OngoingChat from './components/OngoingChat';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -21,6 +22,7 @@ export default function App() {
     <View style={styles.container}>
      <NavigationContainer>
        <Stack.Navigator screenOptions={{ headerShown: false }}>
+       <Stack.Screen name={'OngoingChat'} component={OngoingChat} />
        <Stack.Screen name={'Welcome'} component={Welcome} />
         <Stack.Screen name={'LoginScreen'} component={LoginScreen} />
         <Stack.Screen name={'SignUp'} component={SignUp} />
