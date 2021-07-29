@@ -49,9 +49,11 @@ const OngoingChat = ({navigation, route}) => {
     const addText = ()=>{
         let allChats = db.ref('sample/chats');
         let receiverChats = db.ref('sample/receiverChats');
+        let senderHandle = db.ref('sample/ongoing/sampleHandle')
         if( route && route.params && route.params.senderName ){
             allChats = db.ref(`${route.params.senderName}/${route.params.receiverName}`);
             receiverChats = db.ref(`${route.params.receiverName}/${route.params.senderName}`);
+            senderHandle = db.ref(`${route.params.senderName}/ongoing`).child(route.params.senderID);
         }
         let newText = {
             time: (new Date()).getHours() + ':' + (new Date()).getMinutes(),
