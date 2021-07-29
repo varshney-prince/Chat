@@ -12,7 +12,8 @@ import {
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import { Searchbar } from 'react-native-paper';
 import db from '../config';
-const Chats = ({ navigation }) => {
+
+const Chats = ({ navigation, route }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const onChangeSearch = (query) => setSearchQuery(query);
   const [count, setCount] = useState(Array.from({ length: 1 }).fill(undefined));

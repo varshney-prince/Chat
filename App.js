@@ -8,6 +8,7 @@ import SignUp from './components/SignUp';
 import Welcome from './components/Welcome';
 import ChatHistory  from './components/ChatHistory';
 import OngoingChat from './components/OngoingChat';
+import chatSearch from './components/chatSearch';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -27,6 +28,7 @@ export default function App() {
         <Stack.Screen name={'LoginScreen'} component={LoginScreen} />
         <Stack.Screen name={'SignUp'} component={SignUp} />
         <Stack.Screen name={'ChatHistory'} component={ChatHistory} /> 
+        <Stack.Screen name={'chatSearch'} component={chatSearch} /> 
       </Stack.Navigator>
      </NavigationContainer>
     
