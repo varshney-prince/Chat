@@ -56,7 +56,7 @@ const ChatHistory = ({navigation, route}) => {
         } >
             <View style={styles.chat} >
               <View style={{flexDirection: "row"}} >
-                <MaterialIcons name={'account-arrow-right'} size={24} />
+                <MaterialIcons name={'account-arrow-right'} size={28} />
                 <Text style={styles.chatReceiverName} >{item.receiverUsername}</Text>
               </View>
                 <Text style={styles.previewText} >{item.lastText}</Text>
@@ -73,7 +73,8 @@ const ChatHistory = ({navigation, route}) => {
                 {chats}    
                 </ScrollView>
             </View>
-            <TouchableOpacity style={styles.addChatButton}>
+            <TouchableOpacity style={styles.addChatButton} onPress={()=>{navigation.navigate('chatSearch')
+            , {requestMaker: route.params.chatUser, requestID : route.params.chatUserID } }} >
                 <Text style={styles.addChat} >+</Text>
             </TouchableOpacity>
         </View>
@@ -115,6 +116,7 @@ const styles = StyleSheet.create({
       },
       chatReceiverName: {
           fontWeight: 'bold',
+          fontSize: 20,
           marginBottom: 5,
           marginLeft: 5
       },

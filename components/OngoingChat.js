@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -22,6 +22,7 @@ const OngoingChat = ({navigation, route}) => {
     const [textToSend, setText] = useState('');
     const [handleList, setHandleList] = useState([]);
     const [handle, setHandle] = useState('');
+    const scrollViewRef = useRef();
     
     useEffect( ()=>{
         let allChats = db.ref('sample/chats');
@@ -64,6 +65,7 @@ const OngoingChat = ({navigation, route}) => {
     } );
 
     const addText = ()=>{
+        if(!textToSend){return ;}
         let allChats = db.ref('sample/chats');
         let receiverChats = db.ref('sample/receiverChats');
         let senderHandle = db.ref('sample/ongoing/sampleHandle')
@@ -86,16 +88,13 @@ const OngoingChat = ({navigation, route}) => {
         }
         let receiverHandle;
         if(!handle){
-          console.log("No handle so searching")
          receiverHandle = checkAvailableHandle()
         }
         else{
-          console.log("Handle is available");
           receiverHandle = handle;
         }
         console.log(receiverHandle)
         if(!receiverHandle){
-              console.log("No avlbl handles found")
               addNewSenderHandle(receiverHandleParent, receiverText.message);
         }
         setHandle(receiverHandle);
@@ -107,7 +106,6 @@ const OngoingChat = ({navigation, route}) => {
     };
 
     const checkAvailableHandle = ()=>{
-      console.log("Inside check method")
       for(let item of handleList){
         if( item.receiverUsername == route.params.senderName ){
           return item.id;
@@ -122,7 +120,6 @@ const OngoingChat = ({navigation, route}) => {
         lastText: last
       }
       parent.push(newReceiver);
-      console.log("Calling populate method frm add")
       populateHandleList(parent)
     };
 
@@ -146,7 +143,8 @@ const OngoingChat = ({navigation, route}) => {
             </View>
             <View style={styles.body} >
                 <View style={styles.scroll}>
-                <ScrollView scrollContainerStyle={styles.containerScroll} >
+                <ScrollView scrollContainerStyle={styles.containerScroll} ref={scrollViewRef}
+                    onContentSizeChange={()=>{ scrollViewRef.current.scrollToEnd({animated: true}) }}  >
                     {texts}
                 </ScrollView>
                 </View>
