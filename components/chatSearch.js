@@ -18,8 +18,11 @@ const Chats = ({ navigation, route }) => {
   const onChangeSearch = (query) => setSearchQuery(query);
   const [count, setCount] = useState(Array.from({ length: 1 }).fill(undefined));
   const [userNames, setUserNames] = useState([]);
+  const [ongoingChats, setOngoingChats] = useState([]);
+
   useEffect(() => {
    const users = db.ref('system/users');
+
     users.on('value', (data) => {
       const use = data.val();
       //const userList = ["Arjun"];
@@ -30,6 +33,51 @@ const Chats = ({ navigation, route }) => {
   
     });
 });
+
+  const loadOngoingData = ()=>{
+    const senderOngoingData = db.ref(`${route.params.requestMaker}/ongoing`);
+
+    senderOngoingData.once('value', (data)=>{
+        const snap = data.val();
+        const tempOngoing = [];
+        for(let id in snap){
+          tempOngoing.push({id, ...snap[id]});
+        }
+        setOngoingChats(tempOngoing);
+    } );
+  }
+
+  const checkOngoingChat = ()=>{
+    for(let item of ongoingChats){
+      if( item.receiverUserName === searchQuery ){
+        return item.id;
+      }
+    }
+    return undefined;
+  }
+
+  const moveToChat = ()=>{
+    let recID = checkOngoingChat();
+    const senderOngoingData = db.ref(`${route.params.requestMaker}/ongoing`);
+    if(!recID){
+      let newOngoing = {
+        receiverUserName: searchQuery,
+        lastText: ''
+      };
+      senderOngoingData.push(newOngoing);
+      loadOngoingData();
+      recID = checkOngoingChat();
+    }
+
+    navigation.navigate('OngoingChat', { 
+      senderID : route.params.requestID,
+      senderName: route.params.requestMaker,
+      receiverID: recID,
+      receiverName: searchQuery 
+     } );
+
+  };
+
   var list = count.map((items) => {
     if (userNames.includes(searchQuery)) {
       return (
@@ -40,7 +88,7 @@ const Chats = ({ navigation, route }) => {
             borderless: true,
           }}
           onPress={() => {
-            navigation.navigate('Welcome');
+            moveToChat();
           }}>
           <View style={styles.pressImage}>
             <Image
@@ -54,14 +102,16 @@ const Chats = ({ navigation, route }) => {
         </Pressable>
       );
     } else {
-      return <Text style={{color:'red',margin:20}}>User not found</Text>;
+      return (<View style={{justifyContent: 'center'}} >
+      <Text style={{color:'red',marginLeft:20}}>User not found</Text>
+      </View>);
     }
   });
 
 
   return (
     < SafeAreaView style={{flex:1}}>
-    <View style={{flex:1,borderWidth:1}}>
+    <View style={{flex:1,}}>
       <View style={styles.header}>
         <View style={{ flex: 0.1, justifyContent: 'center' }}>
           <IconIonicons
@@ -143,7 +193,8 @@ const styles = StyleSheet.create({
   },
   pressText:{
     flex:0.7,
-    justifyContent:'center'
+    justifyContent:'center',
+    alignSelf: 'center'
   },
   userText:{
     fontWeight:'bold',
