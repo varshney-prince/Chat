@@ -20,12 +20,17 @@ const OngoingChat = ({navigation, route}) => {
     const [currentText, setCurrentText] = useState('');
     const [chatLog, setChatLog] = useState([]);
     const [textToSend, setText] = useState('');
+    const [handleList, setHandleList] = useState([]);
+    const [handle, setHandle] = useState('');
     
     useEffect( ()=>{
         let allChats = db.ref('sample/chats');
+        let receiverHandleParent = db.ref('sample/ongoing/receiverHandle');
         if( route && route.params && route.params.senderName ){
              allChats = db.ref(`${route.params.senderName}/${route.params.receiverName}`);
+             receiverHandleParent = db.ref(`${route.params.receiverName}/ongoing`);
         }
+        populateHandleList(receiverHandleParent)
         allChats.on('value', (data)=>{
             let snapshot = data.val();
             let tempChats = [];
@@ -36,11 +41,23 @@ const OngoingChat = ({navigation, route}) => {
         } );
     } , [] );
 
+    const populateHandleList = (parent)=>{
+      parent.once('value', (data)=>{
+        let snap = data.val();
+        let tempHandles = [];
+        for(let id in snap){
+          tempHandles.push({id, ...snap[id]})
+        }
+        setHandleList(tempHandles);
+        console.log("Loaded data : "+ handleList);
+      } )
+    };
+
     const texts = chatLog.map( (item, index)=>{
-        return (  <View style={{marginVertical: 2, marginHorizontal: 5}} >
+        return (  <View style={{marginVertical: 3, marginHorizontal: 5}} >
              <View style={item.sender ? styles.senderTextContainer : styles.receiverTextContainer} >
-                <Text style={{fontSize: 10}}>{item.time}</Text>
-                <Text>{item.message}</Text>
+                <Text style={{fontSize: 10, color: item.sender ? 'white' : 'black'}}>{item.time}</Text>
+                <Text style={{color: item.sender ? 'white' : 'black'}} >{item.message}</Text>
             </View>
             </View>
         );
@@ -50,10 +67,12 @@ const OngoingChat = ({navigation, route}) => {
         let allChats = db.ref('sample/chats');
         let receiverChats = db.ref('sample/receiverChats');
         let senderHandle = db.ref('sample/ongoing/sampleHandle')
+        let receiverHandleParent = db.ref('sample/ongoing/receiverHandle')
         if( route && route.params && route.params.senderName ){
             allChats = db.ref(`${route.params.senderName}/${route.params.receiverName}`);
             receiverChats = db.ref(`${route.params.receiverName}/${route.params.senderName}`);
-            senderHandle = db.ref(`${route.params.senderName}/ongoing`).child(route.params.senderID);
+            senderHandle = db.ref(`${route.params.senderName}/ongoing`).child(route.params.receiverID);
+            receiverHandleParent = db.ref(`${route.params.receiverName}/ongoing`);
         }
         let newText = {
             time: (new Date()).getHours() + ':' + (new Date()).getMinutes(),
@@ -65,9 +84,46 @@ const OngoingChat = ({navigation, route}) => {
             sender: false,
             message: textToSend
         }
+        let receiverHandle;
+        if(!handle){
+          console.log("No handle so searching")
+         receiverHandle = checkAvailableHandle()
+        }
+        else{
+          console.log("Handle is available");
+          receiverHandle = handle;
+        }
+        console.log(receiverHandle)
+        if(!receiverHandle){
+              console.log("No avlbl handles found")
+              addNewSenderHandle(receiverHandleParent, receiverText.message);
+        }
+        setHandle(receiverHandle);
         allChats.push(newText);
         receiverChats.push(receiverText);
+        senderHandle.update({lastText: newText.message})
+        receiverHandleParent.child(receiverHandle).update({lastText: receiverText.message})
         setText('');
+    };
+
+    const checkAvailableHandle = ()=>{
+      console.log("Inside check method")
+      for(let item of handleList){
+        if( item.receiverUsername == route.params.senderName ){
+          return item.id;
+        }
+      }
+      return undefined;
+    };
+
+    const addNewSenderHandle = (parent, last) => {
+      let newReceiver = {
+        receiverUsername: route.params.senderName,
+        lastText: last
+      }
+      parent.push(newReceiver);
+      console.log("Calling populate method frm add")
+      populateHandleList(parent)
     };
 
     return (
@@ -177,7 +233,7 @@ const styles = StyleSheet.create({
          alignSelf: 'flex-end'
      },
      receiverTextContainer: {
-         backgroundColor: 'white',
+         backgroundColor: 'skyblue',
          padding: 10, 
          borderRadius: 20,
          marginRight: 50, 

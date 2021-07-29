@@ -11,6 +11,7 @@ import {
 import db from '../config';
 
 import IconIonicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ChatHistory = ({navigation, route}) => {
 
@@ -27,7 +28,7 @@ const ChatHistory = ({navigation, route}) => {
     
     useEffect( ()=>{
         if( route && route.params && route.params.chatUser ){
-        const userData = db.ref( route.params.chatUser)
+        const userData = db.ref(`${route.params.chatUser}/ongoing`)
         userData.on('value', (data)=>{
             let snapshot = data.val();
             let chatsContainer = [];
@@ -54,7 +55,10 @@ const ChatHistory = ({navigation, route}) => {
                 } ) }
         } >
             <View style={styles.chat} >
+              <View style={{flexDirection: "row"}} >
+                <MaterialIcons name={'account-arrow-right'} size={24} />
                 <Text style={styles.chatReceiverName} >{item.receiverUsername}</Text>
+              </View>
                 <Text style={styles.previewText} >{item.lastText}</Text>
             </View></TouchableOpacity>);
     } )
@@ -111,7 +115,8 @@ const styles = StyleSheet.create({
       },
       chatReceiverName: {
           fontWeight: 'bold',
-          marginBottom: 5
+          marginBottom: 5,
+          marginLeft: 5
       },
       addChatButton: {
           backgroundColor: 'blue',
