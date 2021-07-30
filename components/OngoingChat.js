@@ -13,18 +13,33 @@ import db from '../config';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
+const getCurrentTime = ()=>{
+  console.log("Let's set time")
+  let hours = (new Date()).getHours();
+  console.log("hours : "+hours+" length : "+hours.length)
+  if( String(hours).length == 1 ){ hours = "0" + hours; }
+  let minutes = (new Date()).getMinutes();
+  console.log("minutes : "+minutes)
+  if( String(minutes).length == 1 ){ minutes = "0" + minutes; }
+  return hours + ":" + minutes;
+};
+
 //<View style={item.sender ? styles.senderTextContainer : styles.receiverTextContainer } >
 
-const OngoingChat = ({navigation, route}) => {
+export default function OngoingChat({navigation, route}){
 
     const [currentText, setCurrentText] = useState('');
     const [chatLog, setChatLog] = useState([]);
     const [textToSend, setText] = useState('');
     const [handleList, setHandleList] = useState([]);
     const [handle, setHandle] = useState('');
+    const [validatedID, setValidatedID] = useState('');
     const scrollViewRef = useRef();
     
     useEffect( ()=>{
+        console.log("In ongoing chat");
+        console.log(route.params.senderName+" & "+route.params.senderID)
+        console.log(route.params.receiverName+" & "+route.params.receiverID)
         let allChats = db.ref('sample/chats');
         let receiverHandleParent = db.ref('sample/ongoing/receiverHandle');
         if( route && route.params && route.params.senderName ){
@@ -73,16 +88,25 @@ const OngoingChat = ({navigation, route}) => {
         if( route && route.params && route.params.senderName ){
             allChats = db.ref(`${route.params.senderName}/${route.params.receiverName}`);
             receiverChats = db.ref(`${route.params.receiverName}/${route.params.senderName}`);
-            senderHandle = db.ref(`${route.params.senderName}/ongoing`).child(route.params.receiverID);
+            if(!route.params.receiverID){
+              if(!validatedID){
+                senderHandle = validateReceiver()
+                setValidatedID( senderHandle.getKey() );
+              }
+              else{ senderHandle = db.ref(`${route.params.senderName}/ongoing`).child                       (validatedID); } 
+            }
+            else{
+              senderHandle = db.ref(`${route.params.senderName}/ongoing`).child         (route.params.receiverID);
+            }
             receiverHandleParent = db.ref(`${route.params.receiverName}/ongoing`);
         }
         let newText = {
-            time: (new Date()).getHours() + ':' + (new Date()).getMinutes(),
+            time: getCurrentTime(),
             sender: true,
             message: textToSend 
         }
         let receiverText = {
-            time: (new Date()).getHours() + ':' + (new Date()).getMinutes(),
+            time: getCurrentTime(),
             sender: false,
             message: textToSend
         }
@@ -93,9 +117,10 @@ const OngoingChat = ({navigation, route}) => {
         else{
           receiverHandle = handle;
         }
-        console.log(receiverHandle)
         if(!receiverHandle){
-              addNewSenderHandle(receiverHandleParent, receiverText.message);
+              let tempHandle = addNewSenderHandle(receiverHandleParent, receiverText.message);
+              receiverHandle = tempHandle.getKey()
+              populateHandleList(receiverHandleParent)
         }
         setHandle(receiverHandle);
         allChats.push(newText);
@@ -105,22 +130,31 @@ const OngoingChat = ({navigation, route}) => {
         setText('');
     };
 
+    const validateReceiver = ()=> {
+      console.log("Inside validate method")
+      const newParent = db.ref(`${route.params.senderName}/ongoing`);
+      return addNewSenderHandle(newParent, '', route.params.receiverName);
+    }
+
     const checkAvailableHandle = ()=>{
+      console.log("Inside check available")
       for(let item of handleList){
         if( item.receiverUsername == route.params.senderName ){
+          console.log("Found! Returning")
           return item.id;
         }
       }
+      console.log("Nothing found")
       return undefined;
     };
 
-    const addNewSenderHandle = (parent, last) => {
+    const addNewSenderHandle = (parent, last, promptName=route.params.senderName) => {
+      console.log("Adding new sender handle")
       let newReceiver = {
-        receiverUsername: route.params.senderName,
+        receiverUsername: promptName ,
         lastText: last
       }
-      parent.push(newReceiver);
-      populateHandleList(parent)
+      return parent.push(newReceiver);
     };
 
     return (
@@ -133,7 +167,7 @@ const OngoingChat = ({navigation, route}) => {
                     name={'arrow-back'}
                     size={35}
                     color={'black'}
-                    onPress={() => {navigation.navigate('Welcome')}}
+                    onPress={() => {navigation.navigate('ChatHistory', {chatUser: route.params.senderName, chatUserID: route.params.senderID } )}}
                 />
             </View>
                 <View style={{flex: 0.9}}>
@@ -160,8 +194,6 @@ const OngoingChat = ({navigation, route}) => {
         </View>
     );
 };
-
-export default OngoingChat;
 
 const styles = StyleSheet.create({
     header: {

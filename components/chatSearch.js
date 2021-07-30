@@ -18,37 +18,19 @@ const Chats = ({ navigation, route }) => {
   const onChangeSearch = (query) => setSearchQuery(query);
   const [count, setCount] = useState(Array.from({ length: 1 }).fill(undefined));
   const [userNames, setUserNames] = useState([]);
-  const [ongoingChats, setOngoingChats] = useState([]);
 
   useEffect(() => {
    const users = db.ref('system/users');
-
     users.on('value', (data) => {
       const use = data.val();
-      //const userList = ["Arjun"];
       for (let id in use) {
         userNames.push(use[id].name);
-      }
-      //setUserNames(userList);
-  
+      }  
     });
 });
 
-  const loadOngoingData = ()=>{
-    const senderOngoingData = db.ref(`${route.params.requestMaker}/ongoing`);
-
-    senderOngoingData.once('value', (data)=>{
-        const snap = data.val();
-        const tempOngoing = [];
-        for(let id in snap){
-          tempOngoing.push({id, ...snap[id]});
-        }
-        setOngoingChats(tempOngoing);
-    } );
-  }
-
   const checkOngoingChat = ()=>{
-    for(let item of ongoingChats){
+    for(let item of route.params.ongoingChats){
       if( item.receiverUserName === searchQuery ){
         return item.id;
       }
@@ -57,17 +39,7 @@ const Chats = ({ navigation, route }) => {
   }
 
   const moveToChat = ()=>{
-    let recID = checkOngoingChat();
-    const senderOngoingData = db.ref(`${route.params.requestMaker}/ongoing`);
-    if(!recID){
-      let newOngoing = {
-        receiverUserName: searchQuery,
-        lastText: ''
-      };
-      senderOngoingData.push(newOngoing);
-      loadOngoingData();
-      recID = checkOngoingChat();
-    }
+    let recID = checkOngoingChat();    
 
     navigation.navigate('OngoingChat', { 
       senderID : route.params.requestID,
@@ -120,7 +92,8 @@ const Chats = ({ navigation, route }) => {
             size={35}
             color={'black'}
             onPress={() => {
-              navigation.navigate('Welcome');
+              navigation.navigate('ChatHistory', {chatUser: route.params.requestMaker,
+              chatUserID: route.params.requestID } );
             }}
           />
         </View>

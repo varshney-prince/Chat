@@ -73,8 +73,8 @@ const ChatHistory = ({navigation, route}) => {
                 {chats}    
                 </ScrollView>
             </View>
-            <TouchableOpacity style={styles.addChatButton} onPress={()=>{navigation.navigate('chatSearch'
-            , {requestMaker: route.params.chatUser, requestID : route.params.chatUserID }) }} >
+            <TouchableOpacity style={styles.addChatButton} onPress={()=>{navigation.navigate('chatSearch',{requestMaker: route.params.chatUser, requestID : route.params.chatUserID,
+            ongoingChats: userChats }) }} >
                 <Text style={styles.addChat} >+</Text>
             </TouchableOpacity>
         </View>
@@ -137,6 +137,6 @@ const styles = StyleSheet.create({
           fontWeight: 'bold',
           color: 'white',
           marginBottom: 8,
-          marginLeft: 18
+          marginLeft: 4
       }
 });
